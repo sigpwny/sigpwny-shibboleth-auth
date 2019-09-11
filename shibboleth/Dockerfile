@@ -36,6 +36,7 @@ RUN dpkg-buildpackage -b
 # install it
 WORKDIR /opt
 RUN dpkg -i nginx_1.16.1-1~buster_amd64.deb
+COPY shib_clear_headers /etc/nginx/shib_clear_headers
 
 
 
