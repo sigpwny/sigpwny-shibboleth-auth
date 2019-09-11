@@ -1,0 +1,21 @@
+version: '3'
+services:
+  app:
+    build: ./app
+    expose:
+      - "8080"
+  nginx:
+    build: ./shibboleth
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/certbot/conf:/etc/letsencbotrypt
+      - ./data/certbot/www:/var/www/cert
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
