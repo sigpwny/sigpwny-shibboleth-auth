@@ -20,7 +20,7 @@ RUN apt-key add nginx_signing.key
 RUN apt-get update
 
 WORKDIR /opt
-#RUN git clone https://github.com/openresty/headers-more-nginx-module.git
+RUN git clone https://github.com/openresty/headers-more-nginx-module.git
 RUN git clone https://github.com/nginx-shib/nginx-http-shibboleth.git
 RUN mkdir buildnginx && cd buildnginx
 RUN cat /etc/apt/sources.list
@@ -28,7 +28,7 @@ RUN apt-get source nginx
 RUN apt-get build-dep -y nginx
 # add the shib module to the build file
 WORKDIR /opt/nginx-1.16.1
-RUN sed -i 's;--with-ld-opt="$(LDFLAGS)";--with-ld-opt="$(LDFLAGS)" --add-module=/opt/nginx-http-shibboleth;g' debian/rules
+RUN sed -i 's;--with-ld-opt="$(LDFLAGS)";--with-ld-opt="$(LDFLAGS)" --add-module=/opt/headers-more-nginx-module --add-module=/opt/nginx-http-shibboleth;g' debian/rules
 # build the package
 RUN dpkg-buildpackage -b
 # install it
