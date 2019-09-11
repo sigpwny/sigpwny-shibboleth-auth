@@ -27,10 +27,8 @@ RUN cat /etc/apt/sources.list
 RUN apt-get source nginx
 RUN apt-get build-dep -y nginx
 # add the shib module to the build file
-#RUN sed -i 's/--with-ld-opt="\$\(LDFLAGS\)"/--with-ld-opt="\$\(LDFLAGS\)" --add-module=/opt/headers-more-nginx-module --add-module=/opt/nginx-http-shibboleth/g' nginx*/debian/rules
-#RUN sed -i "s;--with-ld-opt=\"\$\(LDFLAGS\)\";--with-ld-opt=\"\$\(LDFLAGS\)\" --add-module=/opt/nginx-http-shibboleth;g" nginx*/debian/rules
 WORKDIR /opt/nginx-1.16.1
-RUN sed -i "s;--with-ld-opt=\"\$\(LDFLAGS\)\";--with-ld-opt=\"\$\(LDFLAGS\)\" --add-module=/opt/nginx-http-shibboleth;g" debian/rules
+RUN sed -i 's;--with-ld-opt="$(LDFLAGS)";--with-ld-opt="$(LDFLAGS)" --add-module=/opt/nginx-http-shibboleth;g' debian/rules
 # build the package
 RUN dpkg-buildpackage -b
 # install it
