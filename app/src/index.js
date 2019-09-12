@@ -13,47 +13,45 @@ client.login(config.DISCORD_BOT_TOKEN);
 // TODO - save authorized users to a db?
 
 let guild = null;
-let botChannel = null;
 const SIGPWNY_GUILD_ID = "485104508175646751";
 client.on("ready", () => {
-	guild = client.guilds.get(SIGPWNY_GUILD_ID);
-	botChannel = guild.channels.get("621807087797796865");
+    guild = client.guilds.get(SIGPWNY_GUILD_ID);
 });
 
 
-//const redirect = encodeURI("https://shib.sigpwny.com/callback/discord");
-const redirect = encodeURI("http://127.0.0.1:8080/callback/discord");
+const redirect = encodeURI("https://shib.sigpwny.com/callback/discord");
+//const redirect = encodeURI("http://127.0.0.1:8080/callback/discord");
 var stateMap = {};
 
 server.get("/login", (req, res, next) => {
-	var state = uuidv4();
-	stateMap[state] = req.header("eppn");
-	res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${config.DISCORD_CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}&state=${state}`, next);
+    var state = uuidv4();
+    stateMap[state] = req.header("eppn");
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${config.DISCORD_CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}&state=${state}`, next);
 });
 
 server.get("/callback/discord", catchAsync(async (req, res, next) => {
-	/*
+    /*
     if (!req.query.code) throw new Error('NoCodeProvided');
     if (!req.query.state) throw new Error('NoStateProvided');
     if (!(req.query.state in stateMap)) throw new Error('InvalidStateProvided');
     */
     if (!req.query.code) {
-    	res.send(400, "No Code Provided");
-    	return next();
+        res.send(400, "No Code Provided");
+        return next();
     }
     if (!req.query.state) {
-    	res.send(400, "No State Provided");
-    	return next();
+        res.send(400, "No State Provided");
+        return next();
     }
     if (!(req.query.state in stateMap)) {
-    	res.send(400, "Invalid State");
-    	return next();
+        res.send(400, "Invalid State");
+        return next();
     }
     const code = req.query.code;
     const creds = btoa(`${config.DISCORD_CLIENT_ID}:${config.DISCORD_CLIENT_SECRET}`);
     const tokenResponse = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
     {
-    	method: "POST",
+        method: "POST",
         headers: {
           Authorization: `Basic ${creds}`,
         },
@@ -62,10 +60,10 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
 
     const userResponse = await fetch(`https://discordapp.com/api/users/@me`,
     {
-    	method: "GET",
-    	headers: {
-    		Authorization: `Bearer ${tokenJson.access_token}`,
-    	},
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${tokenJson.access_token}`,
+        },
     });
     const userJson = await userResponse.json();
     console.log(userJson);
@@ -81,13 +79,13 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
 }));
 
 server.get("/", (req, res, next) => {
-	var body = '<html><body><a href="./login">Login</a></body></html>';
-	res.writeHead(200, {
-	  'Content-Length': Buffer.byteLength(body),
-	  'Content-Type': 'text/html'
-	});
-	res.write(body);
-	res.end();
+    var body = '<html><body><a href="./login">Login</a></body></html>';
+    res.writeHead(200, {
+      'Content-Length': Buffer.byteLength(body),
+      'Content-Type': 'text/html'
+    });
+    res.write(body);
+    res.end();
     return next();
 });
 
