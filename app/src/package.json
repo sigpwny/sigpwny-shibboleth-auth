@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "restify": "^8.4.0"
+    "btoa": "^1.2.1",
+    "discord.js": "^11.5.1",
+    "node-fetch": "^2.6.0",
+    "restify": "^8.4.0",
+    "uuid": "^3.3.3"
   }
 }

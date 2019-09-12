@@ -3,3 +3,4 @@
 data/
 app/src/node_modules/
 secrets.txt
+app/src/config.js
