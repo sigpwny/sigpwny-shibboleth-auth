@@ -4,6 +4,16 @@
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
+        <RequestMapper type="XML">
+	    <RequestMap>
+    	        <Host name="shib.sigpwny.com"
+            	    authType="shibboleth"
+            	    requireSession="true"
+            	    redirectToSSL="443">
+        	    <Path name="/login" />
+    	        </Host>
+	    </RequestMap>
+        </RequestMapper> 
 	<!--
 	     Put your SP's unique entity ID in the below entityID attribute
 	     Optional: set attributes you want assigned to remote_user,

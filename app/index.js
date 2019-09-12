@@ -2,11 +2,11 @@ var restify = require("restify");
 
 var server = restify.createServer();
 
-function respond(req, res, next) {
-  res.send('hello ' + req.params.name);
-  next();
-}
 
+server.get("/login", (req, res, next) => {
+  res.send("eppn:" + req.header("eppn"));
+  return next();
+});
 
 server.get('/', (req, res, next) => {
   res.send('hello world');
@@ -15,7 +15,7 @@ server.get('/', (req, res, next) => {
 
 server.get('/hello/:name', (req, res, next) => {
   res.send('hello ' + req.params.name);
-  next();
+  return next();
 });
 
 server.listen(8080, function() {

@@ -5,7 +5,7 @@ RUN apt-get update
 # saml2/shib stuff
 RUN apt-get install -y opensaml2-schemas xmltooling-schemas libshibsp8 libshibsp-plugins shibboleth-sp2-common shibboleth-sp2-utils
 # nginx stuff
-RUN apt-get install -y build-essential libpcre3 libpcre3-dev libssl-dev zlib1g-dev
+RUN apt-get install -y build-essential libpcre3 libpcre3-dev libssl-dev zlib1g-dev php7.3-fpm
 # etc stuff
 RUN apt-get install -y wget curl git
 
@@ -44,12 +44,12 @@ COPY shibboleth.conf /etc/supervisor/conf.d/shibboleth.conf
 
 
 # -- CONFIGURATION --
-RUN shib-keygen -f
-RUN cat /etc/shibboleth/sp-cert.pem /etc/shibboleth/sp-key.pem
+# RUN shib-keygen -f
+# RUN cat /etc/shibboleth/sp-cert.pem /etc/shibboleth/sp-key.pem
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY attribute-map.xml /etc/shibboleth/attribute-map.xml
 COPY shibboleth2.xml /etc/shibboleth/shibboleth2.xml
+COPY itrust.pem /etc/shibboleth/itrust.pem
 
-RUN ls /etc/supervisor
-
-CMD ["/usr/bin/supervisord","--configuration=/etc/supervisor/supervisord.conf"]
+CMD ["/usr/bin/supervisord"]
+# CMD ["service", "supervisor", "start"]
