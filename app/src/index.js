@@ -72,9 +72,8 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
     const member = guild.member(user);
     const uiucRole = guild.roles.find(role => role.name === 'uiuc');
     // TODO - assign alum role based on shib headers
-    const alumRole = guild.roles.find(role => role.name === 'alum');
+    //const alumRole = guild.roles.find(role => role.name === 'alum');
     member.addRole(uiucRole);
-    botChannel.send(JSON.stringify(userJson));
     res.send(200, "Success!")
 }));
 
