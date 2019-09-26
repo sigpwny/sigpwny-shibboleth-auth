@@ -20,6 +20,7 @@ more_clear_input_headers
 
 more_clear_input_headers
     EPPN
+    UID
     Affiliation
     cn
     Unscoped-Affiliation

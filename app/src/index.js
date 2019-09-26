@@ -28,15 +28,14 @@ client.on("ready", () => {
 const redirect = encodeURI("https://shib.sigpwny.com/callback/discord");
 //const redirect = encodeURI("http://127.0.0.1:8080/callback/discord");
 const shibMap = {};
-const states = new Set();
 
 server.get("/login", (req, res, next) => {
     const session = uuidv4();
     const state = uuidv4();
-    states.add(state);
     shibMap[session] = {
         affiliation: req.header("unscoped-affiliation"),
-        netid: req.header("uid")
+        netid: req.header("uid"),
+        state: state
     }
     console.log(shibMap[session]);
 
@@ -52,11 +51,6 @@ server.get("/login", (req, res, next) => {
 });
 
 server.get("/callback/discord", catchAsync(async (req, res, next) => {
-    /*
-    if (!req.query.code) throw new Error('NoCodeProvided');
-    if (!req.query.state) throw new Error('NoStateProvided');
-    if (!(req.query.state in stateMap)) throw new Error('InvalidStateProvided');
-    */
     if (!req.cookies["session"] || !shibMap.hasOwnProperty(req.cookies["session"])) {
         res.send(400, "Not Authenticated With Shibboleth");
         return next();
@@ -69,12 +63,11 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
         res.send(400, "No State Provided");
         return next();
     }
-    if (!states.has(req.query.state)) {
+    if (shibMap[req.cookies["session"]] !== req.query.state) {
         res.send(400, "Invalid State");
         return next();
     }
     const shibInfo = shibMap[req.cookies["session"]];
-    states.delete(req.query.state);
     const code = req.query.code;
     const creds = btoa(`${config.DISCORD_CLIENT_ID}:${config.DISCORD_CLIENT_SECRET}`);
     const tokenResponse = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
@@ -98,12 +91,15 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
     const user = client.users.get(userJson.id);
     const member = guild.member(user);
     const uiucRole = guild.roles.find(role => role.name === 'uiuc');
-    // TODO - assign alum role based on shib headers
-    //const alumRole = guild.roles.find(role => role.name === 'alum');
     member.addRole(uiucRole);
+    // assign alum role if they are an alum
+    if (shibInfo.affiliation && shibInfo.affiliation.includes('alum')) {
+        const alumRole = guild.roles.find(role => role.name === 'alum');
+        member.addRole(alumRole);
+    }
     const message = `<@${user.id}>,${shibInfo.netid},${shibInfo.affiliation}`;
     logChannel.send(message);
-    fs.appendFileSync("discord.log", `${message}\n`);
+    fs.appendFileSync("discord.csv", `${message}\n`);
     res.send(200, "Success!")
 }));
 
@@ -120,9 +116,9 @@ server.get("/", (req, res, next) => {
     <li>no racism/sexism/homophobia etc.</li>
     <li>no nsfw</li>
     </ul>
-    <a href="./login">Go!</a>
-    <small>note: if you were not already signed into discord web, you might have to try again</small>
-    <small><a href="https://github.com/arxenix/uiuc-shibboleth-auth">Open Source</a></small>
+    <h1><a href="./login">Ok</a></h1>
+    <p><small>note: if you were not already signed into discord web, you might have to try again</small></p>
+    <p><small><a href="https://github.com/arxenix/uiuc-shibboleth-auth">Open Source</a></small></p>
     </body>
     </html>
     `;

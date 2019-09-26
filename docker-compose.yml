@@ -4,6 +4,8 @@ services:
     build: ./app
     expose:
       - "8080"
+    volumes:
+      - ./data/app/discord.csv:/home/node/app/discord.csv
   nginx:
     build: ./shibboleth
     command: "/bin/sh -c '/usr/bin/supervisord; /etc/init.d/shibd restart; while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
