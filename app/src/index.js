@@ -63,11 +63,11 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
         res.send(400, "No State Provided");
         return next();
     }
-    if (shibMap[req.cookies["session"]] !== req.query.state) {
+    const shibInfo = shibMap[req.cookies["session"]];
+    if (shibInfo.state !== req.query.state) {
         res.send(400, "Invalid State");
         return next();
     }
-    const shibInfo = shibMap[req.cookies["session"]];
     const code = req.query.code;
     const creds = btoa(`${config.DISCORD_CLIENT_ID}:${config.DISCORD_CLIENT_SECRET}`);
     const tokenResponse = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
