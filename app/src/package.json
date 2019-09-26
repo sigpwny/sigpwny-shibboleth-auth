@@ -14,6 +14,7 @@
     "discord.js": "^11.5.1",
     "node-fetch": "^2.6.0",
     "restify": "^8.4.0",
+    "restify-cookies": "^0.2.5",
     "uuid": "^3.3.3"
   }
 }
