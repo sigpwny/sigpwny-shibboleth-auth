@@ -35,11 +35,10 @@ server.get("/login", (req, res, next) => {
     const state = uuidv4();
     states.add(state);
     shibMap[session] = {
-        eppn: req.header("eppn"),
-        eduPersonAffiliation: req.header("eduPersonAffiliation"),
-        uid: req.header("uid")
+        affiliation: req.header("unscoped-affiliation"),
+        netid: req.header("uid")
     }
-    console.log(shibMap[cookie]);
+    console.log(shibMap[session]);
 
     res.setCookie("session", session, {
         path: "/",
@@ -75,7 +74,7 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
         return next();
     }
     const shibInfo = shibMap[req.cookies["session"]];
-    states.delete(state);
+    states.delete(req.query.state);
     const code = req.query.code;
     const creds = btoa(`${config.DISCORD_CLIENT_ID}:${config.DISCORD_CLIENT_SECRET}`);
     const tokenResponse = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
@@ -102,9 +101,9 @@ server.get("/callback/discord", catchAsync(async (req, res, next) => {
     // TODO - assign alum role based on shib headers
     //const alumRole = guild.roles.find(role => role.name === 'alum');
     member.addRole(uiucRole);
-    const message = `<@${user.id}>,${shibInfo.eppn},${shibInfo.eduPersonAffiliation}`;
+    const message = `<@${user.id}>,${shibInfo.netid},${shibInfo.affiliation}`;
     logChannel.send(message);
-    fs.appendFileSync("/var/log/discord.log", `${message}\n`);
+    fs.appendFileSync("discord.log", `${message}\n`);
     res.send(200, "Success!")
 }));
 
