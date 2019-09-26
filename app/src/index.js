@@ -111,14 +111,18 @@ server.get("/", (req, res, next) => {
     const body = `
     <html>
     <body>
-    <p>Sign up for SigPwny</p>
+    <p>Authenticate and Sign up for the SIGPwny discord</p>
+    <p>Information collected: NetID, Discord ID, University Affiliation</p>
     <p>By signing up, you agree to our code of conduct.</p>
     <ul>
     <li>be nice</li>
+    <li>dont do anything illegal</li>
     <li>no racism/sexism/homophobia etc.</li>
     <li>no nsfw</li>
     </ul>
     <a href="./login">Go!</a>
+    <small>note: if you were not already signed into discord web, you might have to try again</small>
+    <small><a href="https://github.com/arxenix/uiuc-shibboleth-auth">Open Source</a></small>
     </body>
     </html>
     `;
