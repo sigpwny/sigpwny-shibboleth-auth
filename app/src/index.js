@@ -109,12 +109,12 @@ server.get("/", (req, res, next) => {
     <body>
     <p>Authenticate and Sign up for the SIGPwny discord</p>
     <p>Information collected: NetID, Discord ID, University Affiliation</p>
-    <p>By signing up, you agree to our code of conduct.</p>
+    <p>SIGPwny cares a lot about being inclusive. By signing in, you agree to our rules/code of conduct.</p>
     <ul>
-    <li>be nice</li>
-    <li>dont do anything illegal</li>
-    <li>no racism/sexism/homophobia etc.</li>
-    <li>no nsfw</li>
+    <li>Be nice</li>
+    <li>Don&apos;t do anything illegal.</li>
+    <li>No racism/sexism/homophobia etc.</li>
+    <li>No NSFW.</li>
     </ul>
     <h1><a href="./login">Ok</a></h1>
     <p><small>note: if you were not already signed into discord web, you might have to try again</small></p>
