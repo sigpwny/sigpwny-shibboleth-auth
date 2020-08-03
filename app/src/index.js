@@ -1,4 +1,5 @@
 const restify = require("restify");
+const Keyv = require('keyv');
 const CookieParser = require('restify-cookies');
 const uuidv4 = require("uuid/v4");
 const fetch = require("node-fetch");
@@ -12,6 +13,10 @@ const { catchAsync } = require("./utils");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 client.login(config.DISCORD_BOT_TOKEN);
+
+const keyv = new Keyv(undefined, { ttl: 600*1000 });
+// Handle DB connection errors
+keyv.on('error', err => console.log('Connection Error', err));
 
 // TODO - save authorized users to a db?
 
@@ -27,17 +32,16 @@ client.on("ready", () => {
 
 const redirect = encodeURI("https://shib.sigpwny.com/callback/discord");
 //const redirect = encodeURI("http://127.0.0.1:8080/callback/discord");
-const shibMap = {};
 
 server.get("/login", (req, res, next) => {
     const session = uuidv4();
     const state = uuidv4();
-    shibMap[session] = {
+    keyv.set(session, {
         affiliation: req.header("unscoped-affiliation"),
         netid: req.header("uid"),
         state: state
-    }
-    console.log(shibMap[session]);
+    });
+    console.log(keyv.get(session));
 
     res.setCookie("session", session, {
         path: "/",
@@ -51,21 +55,25 @@ server.get("/login", (req, res, next) => {
 });
 
 server.get("/callback/discord", catchAsync(async (req, res, next) => {
-    if (!req.cookies["session"] || !shibMap.hasOwnProperty(req.cookies["session"])) {
-        res.send(400, "Not Authenticated With Shibboleth");
+    if (!req.cookies["session"]) {
+        res.send(400, "No session cookie found. Do you have cookies disabled?");
+        return next();
+    }
+    const shibInfo = keyv.get(req.cookies["session"]);
+    if (!shibInfo) {
+        res.send(400, "Not authenticated with Shibboleth, or authentication expired. Try again.");
         return next();
     }
     if (!req.query.code) {
-        res.send(400, "No Code Provided");
+        res.send(400, "No code provided. Please report this error.");
         return next();
     }
     if (!req.query.state) {
-        res.send(400, "No State Provided");
+        res.send(400, "No state provided. Please report this error.");
         return next();
     }
-    const shibInfo = shibMap[req.cookies["session"]];
     if (shibInfo.state !== req.query.state) {
-        res.send(400, "Invalid State");
+        res.send(400, "Invalid state provided. Please report this error.");
         return next();
     }
     const code = req.query.code;
