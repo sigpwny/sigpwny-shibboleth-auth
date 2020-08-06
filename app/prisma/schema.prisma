@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  discordId        String @id
+  shibId           String
+  shibAffiliations String[] 
+  servers          DiscordServer[] @relation(references: [id]) // all servers that they are part of
+}
+
+model DiscordServer {
+  id               String @id
+  name             String
+  description      String
+  stylesheet       String
+  // whether to use the allowlist
+  allowlistEnabled Boolean  
+  // list of allowed shibIds
+  allowlist        String[] 
+  // list of discord user ids of managers
+  managers         String[] 
+  // list of all authenticated users
+  users            User[] @relation(references: [discordId])
+  // roleId to give all authenticated users
+  authRole         String?
+  // affiliation -> roleId mappings
+  roleMappings     AffiliationToRoleMapping[] 
+}
+
+model AffiliationToRoleMapping {
+  id               Int @id @default(autoincrement())
+  shibAffiliation  String
+  discordRole      String
+  discordServer    DiscordServer @relation(fields: [discordServerId], references: [id])
+  discordServerId  String
+}
