@@ -7,10 +7,30 @@ services:
     volumes:
       - ./data/app/discord.csv:/home/node/app/discord.csv
     environment:
-      DATABASE_URI: ""
+      DATABASE_URL: "postgresql://dbuser:dbpassword@db:5432/postgresdb"
+      REDIS_URL: "redis://cache:6379"
       DISCORD_CLIENT_ID: ""
       DISCORD_CLIENT_SECRET: ""
       DISCORD_BOT_TOKEN: ""
+    depends_on:
+      - cache
+      - db
+    networks:
+        internal:
+  cache:
+    image: "redis:alpine"
+    restart: always
+    networks:
+        internal:
+  db:
+    image: "postgres:alpine"
+    restart: always
+    environment:
+      - POSTGRES_DB=postgresdb
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+    networks:
+        internal:
   nginx:
     build: ./shibboleth
     command: "/bin/sh -c '/usr/bin/supervisord; /etc/init.d/shibd restart; while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
@@ -22,9 +42,20 @@ services:
       - ./data/certbot/www:/var/www/certbot
       - ./data/shib/sp-cert.pem:/etc/shibboleth/sp-cert.pem
       - ./data/shib/sp-key.pem:/etc/shibboleth/sp-key.pem
+    depends_on:
+      - app
+    networks:
+      default:
+      internal:
   certbot:
     image: certbot/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
+    networks:
+      internal:
+networks:
+  default:
+  internal:
+      internal: true

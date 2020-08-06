@@ -18,10 +18,10 @@ model User {
 }
 
 model DiscordServer {
+  // discord guild id
   id               String @id
   name             String
   description      String
-  stylesheet       String
   // whether to use the allowlist
   allowlistEnabled Boolean  
   // list of allowed shibIds
@@ -34,6 +34,8 @@ model DiscordServer {
   authRole         String?
   // affiliation -> roleId mappings
   roleMappings     AffiliationToRoleMapping[] 
+  // channel id to dump logs in
+  loggingChannelId String?
 }
 
 model AffiliationToRoleMapping {

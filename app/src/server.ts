@@ -6,6 +6,8 @@ import Keyv from 'keyv';
 import { v4 as uuidv4, v1 as uuidv1 } from 'uuid';
 
 import config from './config';
+import { PrismaClient } from '@prisma/client'
+
 
 const app = new Koa();
 // middleware to parse form bodies
@@ -14,8 +16,11 @@ const Joi = Router.Joi;
 const router = Router();
 
 const SESSION_TTL_SECONDS = 600
-// TODO - redis backend for keyv
-const sessionStore = new Keyv(undefined, { ttl: SESSION_TTL_SECONDS*1000 });
+// sesion store uses Keyv backed by redis
+const sessionStore = new Keyv('redis://cache:6379', { ttl: SESSION_TTL_SECONDS*1000 });
+// init db connection via prisma
+const prisma = new PrismaClient()
+
 sessionStore.on('error', err => console.log('Connection Error', err));
 
 const discordAuth = new ClientOAuth2({
@@ -54,7 +59,7 @@ router.get('/auth/discord/callback', {
     ctx.body = "todo"
 });
 router.get('/', async (ctx) => {
-    ctx.body = 'Hello World!';
+    ctx.body = 'shibboleth discord auth';
 });
 app.use(router.middleware());
 
