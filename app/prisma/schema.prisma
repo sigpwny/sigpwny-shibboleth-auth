@@ -11,8 +11,8 @@ generator client {
 }
 
 model User {
-  discordId        String @id
-  shibId           String
+  shibId           String @id
+  discordId        String
   shibAffiliations String[] 
   servers          DiscordServer[] @relation(references: [id]) // all servers that they are part of
 }
@@ -20,16 +20,16 @@ model User {
 model DiscordServer {
   // discord guild id
   id               String @id
-  name             String
-  description      String
+  name             String @default("temp name")
+  description      String @default("temp description")
   // whether to use the allowlist
-  allowlistEnabled Boolean  
+  allowlistEnabled Boolean @default(false)
   // list of allowed shibIds
   allowlist        String[] 
   // list of discord user ids of managers
   managers         String[] 
   // list of all authenticated users
-  users            User[] @relation(references: [discordId])
+  users            User[] @relation(references: [shibId])
   // roleId to give all authenticated users
   authRole         String?
   // affiliation -> roleId mappings
