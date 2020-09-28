@@ -13,7 +13,7 @@ services:
       DISCORD_CLIENT_SECRET: ""
       DISCORD_BOT_TOKEN: ""
       APP_HOSTNAME: "https://shib.sigpwny.com"
-      JWT_SECRET: "changeme123"=
+      JWT_SECRET: "changeme123"
       ADMIN_USER_IDS: "181927679195480064"
     depends_on:
       - cache
