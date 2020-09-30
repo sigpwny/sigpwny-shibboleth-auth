@@ -8,3 +8,5 @@ docker-compose-local.yml
 .env
 app.env
 db.env
+app/commando.db
+app/prisma/dev.db
