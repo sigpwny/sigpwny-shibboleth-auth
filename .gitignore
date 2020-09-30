@@ -6,3 +6,5 @@ node_modules/
 /app/dist/
 docker-compose-local.yml
 .env
+app.env
+db.env

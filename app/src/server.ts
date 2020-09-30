@@ -103,13 +103,13 @@ router.post('/admin/add_server', {
 // ONLY the /login endpoint is protected by shib (shibboleth2.xml). We must get the headers from here and store them in user session.
 router.get('/login', {
     validate: {
-        header: {
+        header: Joi.object({
             'unscoped-affiliation': Joi.string(),
             'uid': Joi.string()
-        },
-        query: {
+        }),
+        query: Joi.object({
             'server': Joi.string()
-        }
+        })
     }
 }, async (ctx) => {
     const state = uuidv4();
@@ -132,10 +132,10 @@ router.get('/login', {
 router.use('/auth/discord/callback', jwtMiddleware);
 router.get('/auth/discord/callback', {
     validate: {
-        query: {
+        query: Joi.object({
             'code': Joi.string(),
             'state': Joi.string()
-        }
+        })
     }
 }, async (ctx) => {
     const {discordServer, affiliations: shibAffiliations, uid: shibId, state: oAuthState} = ctx.state.jwtdata;

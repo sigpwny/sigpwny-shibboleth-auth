@@ -5,9 +5,11 @@ WORKDIR /home/node/app
 RUN npm install -g @prisma/cli
 COPY package*.json ./
 USER node
+COPY --chown=node:node prisma/ ./prisma/
 RUN npm install
 # copy src code
-COPY --chown=node:node src/ ./
+COPY --chown=node:node src/ ./src/
+COPY --chown=node:node tsconfig.json ./
 RUN npm run build
 # run server
 EXPOSE 8080

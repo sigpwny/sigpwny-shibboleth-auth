@@ -4,8 +4,8 @@ services:
     build: ./app
     expose:
       - "8080"
-    volumes:
-      - ./data/app/discord.csv:/home/node/app/discord.csv
+    env_file:
+      - ./app.env
     environment:
       DATABASE_URL: "postgresql://dbuser:dbpassword@db:5432/postgresdb"
       DISCORD_CLIENT_ID: ""
@@ -15,17 +15,16 @@ services:
       JWT_SECRET: "changeme123"
       SUPERADMIN_USER_IDS: "181927679195480064"
     depends_on:
-      - cache
       - db
     networks:
         internal:
   db:
     image: "postgres:alpine"
     restart: always
-    environment:
-      POSTGRES_DB: postgresdb
-      POSTGRES_USER: dbuser
-      POSTGRES_PASSWORD: dbpassword
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    env_file:
+      - ./db.env
     networks:
         internal:
   nginx:
