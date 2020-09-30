@@ -4,3 +4,5 @@
 node_modules/
 /data/
 /app/dist/
+docker-compose-local.yml
+.env

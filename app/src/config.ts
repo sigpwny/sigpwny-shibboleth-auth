@@ -4,5 +4,5 @@ export default {
     DISCORD_BOT_TOKEN: "" || process.env.DISCORD_BOT_TOKEN,
     APP_HOSTNAME: "" || process.env.APP_HOSTNAME,
     JWT_SECRET: "" || process.env.JWT_SECRET,
-    ADMIN_USER_IDS: process.env.ADMIN_USER_IDS?.replace(" ", "").split(",")
+    SUPERADMIN_USER_IDS: process.env.SUPERADMIN_USER_IDS?.replace(" ", "").split(",")
 }

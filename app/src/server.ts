@@ -7,16 +7,13 @@ import jsonwebtoken from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 
 import config from './config';
-import { PrismaClient } from '@prisma/client'
+import db from './db';
 
 const app = new Koa();
 // middleware to parse form bodies
 app.use(bodyParser());
 const Joi = Router.Joi;
 const router = Router();
-
-// init db connection via prisma
-const prisma = new PrismaClient()
 
 const discordAuth = new ClientOAuth2({
     clientId: config.DISCORD_CLIENT_ID,
@@ -49,6 +46,7 @@ router.get('/api/login/:id', {
 });
 
 
+/*
 router.get('/admin/login', async (ctx) => {
     const state = uuidv4();
     const jwt = jsonwebtoken.sign({
@@ -82,7 +80,6 @@ router.get('/auth/discord/admin/callback', async (ctx) => {
         admin: true
     }, config.JWT_SECRET as string);
     ctx.cookies.set('session', jwt, {secure: true, httpOnly: true});
-
 });
 
 
@@ -99,6 +96,7 @@ router.post('/admin/add_server', {
     });
     ctx.body = result;
 });
+*/
 
 
 
@@ -123,7 +121,7 @@ router.get('/login', {
     };
     console.log(data);
 
-    const server = await prisma.discordServer.findOne({where: {id: data.discordServer}});
+    const server = await db.discordServer.findOne({where: {id: data.discordServer}});
     ctx.assert(server, 400, 'invalid discord server');
 
     const jwt = jsonwebtoken.sign(data, config.JWT_SECRET as string);
@@ -157,7 +155,7 @@ router.get('/auth/discord/callback', {
     console.log(userJson);
     const userId = userJson.id; // the discord user id
 
-    const user = await prisma.user.create({
+    const user = await db.user.create({
         data: {
             shibId: shibId,
             discordId: userId,
