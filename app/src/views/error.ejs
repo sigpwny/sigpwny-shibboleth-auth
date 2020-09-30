@@ -1,0 +1,8 @@
+<p class="lead">
+    An unexpected error occurred - <%= err.status %>
+</p>
+<% if (env === "development") { %>
+    <code>
+        <%= err.message %>
+    </code>
+<% } %>

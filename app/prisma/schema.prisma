@@ -27,7 +27,7 @@ model DiscordServer {
   // list of allowed shibIds
   allowlist        String[] 
   // list of discord user ids of managers
-  managers         String[] 
+  //managers         String[] 
   // list of all authenticated users
   users            User[] @relation(references: [shibId])
   // roleId to give all authenticated users
@@ -39,9 +39,11 @@ model DiscordServer {
 }
 
 model AffiliationToRoleMapping {
-  id               Int @id @default(autoincrement())
+  //id               Int @id @default(autoincrement())
   shibAffiliation  String
   discordRole      String
   discordServer    DiscordServer @relation(fields: [discordServerId], references: [id])
   discordServerId  String
+
+  @@id([shibAffiliation, discordServerId])
 }
