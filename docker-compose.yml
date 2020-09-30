@@ -8,7 +8,6 @@ services:
       - ./data/app/discord.csv:/home/node/app/discord.csv
     environment:
       DATABASE_URL: "postgresql://dbuser:dbpassword@db:5432/postgresdb"
-      REDIS_URL: "redis://cache:6379"
       DISCORD_CLIENT_ID: ""
       DISCORD_CLIENT_SECRET: ""
       DISCORD_BOT_TOKEN: ""
@@ -18,11 +17,6 @@ services:
     depends_on:
       - cache
       - db
-    networks:
-        internal:
-  cache:
-    image: "redis:alpine"
-    restart: always
     networks:
         internal:
   db:
