@@ -121,7 +121,7 @@ router.get('/auth/discord/callback', {
                     users: {
                         upsert: [
                             {
-                                create: {shibId: shibId, discordId: userId, shibAffiliations: shibAffiliations},
+                                create: {shibId: shibId, discordId: userId, shibAffiliations: shibAffiliations.join(";")},
                                 update: {discordId: userId, shibAffiliations: shibAffiliations},
                                 where: {shibId: shibId}
                             }
