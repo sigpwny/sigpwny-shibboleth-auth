@@ -107,9 +107,9 @@ router.get('/login', {
             'unscoped-affiliation': Joi.string().required(),
             'uid': Joi.string().required()
         }).options({allowUnknown: true}),
-        query: Joi.object({
+        query: {
             'server': Joi.string()
-        })
+        }
     }
 }, async (ctx) => {
     const state = uuidv4();
@@ -132,10 +132,10 @@ router.get('/login', {
 router.use('/auth/discord/callback', jwtMiddleware);
 router.get('/auth/discord/callback', {
     validate: {
-        query: Joi.object({
+        query: {
             'code': Joi.string(),
             'state': Joi.string()
-        })
+        }
     }
 }, async (ctx) => {
     const {discordServer, affiliations: shibAffiliations, uid: shibId, state: oAuthState} = ctx.state.jwtdata;
