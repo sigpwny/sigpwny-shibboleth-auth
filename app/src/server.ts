@@ -104,9 +104,9 @@ router.post('/admin/add_server', {
 router.get('/login', {
     validate: {
         header: Joi.object({
-            'unscoped-affiliation': Joi.string(),
-            'uid': Joi.string()
-        }),
+            'unscoped-affiliation': Joi.string().required(),
+            'uid': Joi.string().required()
+        }).options({allowUnknown: true}),
         query: Joi.object({
             'server': Joi.string()
         })
