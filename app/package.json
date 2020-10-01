@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "dev": "ts-node src/server.ts",
-    "build": "tsc -p .",
+    "build": "tsc -p . && cp -R src/views dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
