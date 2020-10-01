@@ -22,7 +22,7 @@ export default class DescriptionCommand extends Command {
                 discordServerId: message.guild.id
             }
         });
-        let csvString = "";
+        let csvString = "discordId,shibId,shibAffiliations\n";
         for (let signup of signups) {
             csvString += `${signup.discordId},${signup.shibId},${signup.shibAffiliations}\n`;
         }
