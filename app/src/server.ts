@@ -78,7 +78,7 @@ router.get('/login', {
     ctx.assert(server, 400, 'invalid discord server');
 
     const jwt = jsonwebtoken.sign(data, config.JWT_SECRET as string);
-    ctx.cookies.set('session', jwt, {secure: true, httpOnly: true});
+    ctx.cookies.set('session', jwt, {httpOnly: true});
     ctx.redirect(discordAuth.code.getUri({redirectUri: `${config.APP_HOSTNAME}/auth/discord/callback`, state: state}));
 });
 
