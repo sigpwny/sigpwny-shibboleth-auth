@@ -69,7 +69,7 @@ router.get('/login', {
 }, async (ctx) => {
     const state = uuidv4();
     const data = {
-        affiliations: ctx.request.headers['unscoped-affiliation'].split(','),
+        affiliations: ctx.request.headers['unscoped-affiliation'].split(';'),
         uid: ctx.request.headers['uid'],
         discordServer: ctx.request.query['server'],
         state: state
