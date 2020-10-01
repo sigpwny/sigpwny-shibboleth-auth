@@ -1,5 +1,5 @@
 import path from 'path';
-import Koa, { DefaultContext, DefaultState } from 'koa';
+import Koa from 'koa';
 import Router from 'koa-joi-router';
 import bodyParser from 'koa-bodyparser';
 import ClientOAuth2 from 'client-oauth2';
@@ -12,7 +12,6 @@ import config from './config';
 import { getGuildMember, commando, logToChannel } from './discord';
 import db from './db';
 import { markdownToSafeHtml } from './markdown';
-import { exception } from 'console';
 
 const app = new Koa();
 // ejs templating
