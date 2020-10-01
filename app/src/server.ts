@@ -123,7 +123,7 @@ router.get('/auth/discord/callback', {
                         upsert: [
                             {
                                 create: {shibId: shibId, discordId: userId, shibAffiliations: shibAffiliations.join(";")},
-                                update: {discordId: userId, shibAffiliations: shibAffiliations},
+                                update: {discordId: userId, shibAffiliations: shibAffiliations.join(";")},
                                 where: {shibId: shibId}
                             }
                         ]
