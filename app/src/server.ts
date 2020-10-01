@@ -7,6 +7,7 @@ import koaJwt from 'koa-jwt';
 import jsonwebtoken from 'jsonwebtoken';
 import render from 'koa-ejs'
 import { v4 as uuidv4 } from 'uuid';
+import fetch from 'node-fetch';
 
 import config from './config';
 import { getGuildMember, commando, logToChannel } from './discord';
@@ -32,7 +33,8 @@ const discordAuth = new ClientOAuth2({
     clientId: config.DISCORD_CLIENT_ID,
     clientSecret: config.DISCORD_CLIENT_SECRET,
     accessTokenUri: 'https://discordapp.com/api/oauth2/token',
-    authorizationUri: 'https://discordapp.com/api/oauth2/authorize'
+    authorizationUri: 'https://discordapp.com/api/oauth2/authorize',
+    redirectUri: `${config.APP_HOSTNAME}/auth/discord/callback`
   });
 
 const jwtMiddleware = koaJwt({ 
@@ -79,7 +81,7 @@ router.get('/login', {
 
     const jwt = jsonwebtoken.sign(data, config.JWT_SECRET as string);
     ctx.cookies.set('session', jwt, {httpOnly: true});
-    ctx.redirect(discordAuth.code.getUri({scopes: ["identify"], redirectUri: `${config.APP_HOSTNAME}/auth/discord/callback`, state: state}));
+    ctx.redirect(discordAuth.code.getUri({scopes: ["identify"], state: state}));
 });
 
 router.use('/auth/discord/callback', jwtMiddleware);
