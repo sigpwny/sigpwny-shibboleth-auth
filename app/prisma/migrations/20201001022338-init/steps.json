@@ -30,8 +30,8 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "shibId",
-      "type": "String",
+      "field": "id",
+      "type": "Int",
       "arity": "Required"
     },
     {
@@ -40,10 +40,42 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "shibId"
+          "field": "id"
         },
         "directive": "id"
       }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "shibId",
+      "type": "String",
+      "arity": "Required"
     },
     {
       "tag": "CreateField",
@@ -62,9 +94,9 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "servers",
+      "field": "server",
       "type": "DiscordServer",
-      "arity": "List"
+      "arity": "Required"
     },
     {
       "tag": "CreateDirective",
@@ -72,7 +104,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "servers"
+          "field": "server"
         },
         "directive": "relation"
       }
@@ -84,7 +116,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "servers"
+          "field": "server"
         },
         "directive": "relation"
       },
@@ -215,31 +247,6 @@
       "field": "users",
       "type": "User",
       "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "DiscordServer",
-          "field": "users"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "DiscordServer",
-          "field": "users"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[shibId]"
     },
     {
       "tag": "CreateField",

@@ -11,6 +11,7 @@ import DescriptionCommand from "./commands/config/description";
 import RoleMappingCommand from "./commands/config/roleMapping";
 import LoggingChannelCommand from "./commands/config/loggingChannel";
 import LinkCommand from "./commands/config/link";
+import CSVCommand from "./commands/config/csv";
 import { DiscordServer } from '@prisma/client';
 
 const commando = new CommandoClient({
@@ -33,7 +34,8 @@ commando.registry
         DescriptionCommand,
         LoggingChannelCommand,
         RoleMappingCommand,
-        LinkCommand
+        LinkCommand,
+        CSVCommand
     ]);
 
 commando.on("guildCreate", function(guild){
