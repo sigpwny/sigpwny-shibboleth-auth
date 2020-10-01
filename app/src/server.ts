@@ -79,7 +79,7 @@ router.get('/login', {
 
     const jwt = jsonwebtoken.sign(data, config.JWT_SECRET as string);
     ctx.cookies.set('session', jwt, {httpOnly: true});
-    ctx.redirect(discordAuth.code.getUri({redirectUri: `${config.APP_HOSTNAME}/auth/discord/callback`, state: state}));
+    ctx.redirect(discordAuth.code.getUri({scopes: ["identify"], redirectUri: `${config.APP_HOSTNAME}/auth/discord/callback`, state: state}));
 });
 
 router.use('/auth/discord/callback', jwtMiddleware);
